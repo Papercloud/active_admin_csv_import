@@ -7,7 +7,7 @@ module ActiveAdminCsvImport
       end
 
       collection_action :import_csv do
-        @fields = active_admin_config.resource_class.columns.map(&:name)
+        @fields = active_admin_config.resource_class.columns.map(&:name) - ["id", "updated_at", "created_at"]
         render "admin/csv/import_csv"
       end
 
