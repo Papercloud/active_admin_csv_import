@@ -13,11 +13,8 @@ Gem::Specification.new do |s|
   s.summary     = "Add CSV import to Active Admin"
   s.description = "CSV import for Active Admin capable of handling CSV files too large to import via direct file upload to Heroku"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
-  s.test_files = Dir["test/**/*"]
+  s.files = Dir["{app,lib,vendor}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
 
   s.add_dependency "rails", "~> 3.2.14"
-  # s.add_dependency "backbone-rails", ">= 1.0.0.1"
-
-  s.add_development_dependency "sqlite3"
+  s.add_dependency "railties", [">= 3.1"]
 end
