@@ -36,6 +36,7 @@ http://active-admin-csv-import.herokuapp.com/admin
 admin@example.com
 password
 ```
+Source: https://github.com/Papercloud/active-admin-csv-import-example
 
 ## Wishlist / TODOS
 
