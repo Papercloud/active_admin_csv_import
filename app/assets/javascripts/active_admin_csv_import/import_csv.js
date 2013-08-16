@@ -24,6 +24,9 @@ $(document).ready(function() {
   // listen for the file to be submitted
   $($file).change(function(e) {
 
+    var progress = $("#csv-import-progress");
+    progress.text("Loading...");
+
     // create the dataset in the usual way but specifying file attribute
     var dataset = new recline.Model.Dataset({
       file: $file.files[0],
@@ -38,6 +41,8 @@ $(document).ready(function() {
         return;
       }
 
+      // Re-query to get all records. Otherwise recline.js defaults to just 100.
+      dataset.query({size: dataset.recordCount});
 
       // Check whether the CSV's columns match up with our data model.
       // import_csv_fields is passed in from Rails in import_csv.html.erb
@@ -58,37 +63,46 @@ $(document).ready(function() {
       } else {
         // Import!
 
-        var progress = $("#csv-import-progress");
         var total = data.recordCount;
         var loaded = 0;
         var succeeded = 0;
+        var i = 0;
 
         _.each(data.records.models, function(record) {
 
-          // Filter only the attributes we want, and normalise column names.
-          var record_data = {};
-          record_data[import_csv_resource_name] = {};
+          // Add a gap between each post to give the server
+          // room to breathe
+          setTimeout(function () {
 
-          _.each(_.pairs(record.attributes), function(attr) {
-            var underscored_name = _.underscored(attr[0]);
-            if (_.contains(wanted_columns, underscored_name)) {
-              record_data[import_csv_resource_name][underscored_name] = attr[1];
-            }
-          });
+            // Filter only the attributes we want, and normalise column names.
+            var record_data = {};
+            record_data[import_csv_resource_name] = {};
 
-          $.post(
-          import_csv_path,
-          record_data,
-          function(data) {
-            succeeded = succeeded + 1;
-          }).done(function() {
-            loaded = loaded + 1;
-            progress.text("Progress " + toString(Math.round((total / loaded))) + "%");
+            _.each(_.pairs(record.attributes), function(attr) {
+              var underscored_name = _.underscored(attr[0]);
+              if (_.contains(wanted_columns, underscored_name)) {
+                record_data[import_csv_resource_name][underscored_name] = attr[1];
+              }
+            });
 
-            if (loaded == total) {
-              progress.text("Done. Imported " + total + " records, " + succeeded + " succeeded.");
-            }
-          });
+            $.post(
+            import_csv_path,
+            record_data,
+            function(data) {
+              succeeded = succeeded + 1;
+            }).always(function() {
+              loaded = loaded + 1;
+              progress.text("Progress: " + loaded + " of " + total);
+
+              if (loaded == total) {
+                progress.text("Done. Imported " + total + " records, " + succeeded + " succeeded.");
+              }
+            });
+
+          }, 100 * i);
+
+          i++;
+
         });
       }
 
