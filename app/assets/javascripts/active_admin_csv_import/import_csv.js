@@ -100,7 +100,7 @@ $(document).ready(function() {
               if (loaded == total) {
                 progress.html("Done. Imported " + total + " records, " + succeeded + " succeeded.");
                 if (redirect_path) {
-                  progress.html(progress.html + "<a href='"+redirect_path +"'>Click to continue.</a>");
+                  progress.html(progress.text() + " <a href='"+redirect_path +"'>Click to continue.</a>");
                 }
               }
             });
