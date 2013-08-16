@@ -3,7 +3,7 @@
 <h3>Import <%= active_admin_config.resource_name.pluralize.humanize %> from a CSV File<h3>
 <ul>
   <li>Save a CSV as 'Windows Comma Separated' from Excel.</li>
-  <li>Your CSV should have the following column headings: <%= @fields.map(&:humanize).to_sentence %>. The order doesn't matter.</li>
+  <li>Your CSV should have the following column headings: <%= @fields.map(&:to_s).map(&:humanize).to_sentence %>. The order doesn't matter.</li>
   <li>If a record already exists a duplicate will be created.</li>
 </ul>
 <input id="csv-file-input" type="file">
