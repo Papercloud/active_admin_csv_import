@@ -8,7 +8,13 @@ module ActiveAdminCsvImport
 
       collection_action :import_csv do
         @fields     = options[:columns] ||= active_admin_config.resource_class.columns.map(&:name) - ["id", "updated_at", "created_at"]
-        @post_path  = collection_path(:format => options[:format])
+
+        @post_path  = options[:path].try(:call)
+        @post_path ||= collection_path
+
+        @redirect_path = options[:redirect_path].try(:call)
+        @redirect_path ||= collection_path
+
         render "admin/csv/import_csv"
       end
 

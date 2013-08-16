@@ -19,6 +19,9 @@ $(document).ready(function() {
     // Reset input so .change will be triggered if we load the same file again.
     $($file).wrap('<form>').closest('form').get(0).reset();
     $($file).unwrap();
+
+    var progress = $("#csv-import-progress");
+    progress.text("");
   };
 
   // listen for the file to be submitted
@@ -95,7 +98,10 @@ $(document).ready(function() {
               progress.text("Progress: " + loaded + " of " + total);
 
               if (loaded == total) {
-                progress.text("Done. Imported " + total + " records, " + succeeded + " succeeded.");
+                progress.html("Done. Imported " + total + " records, " + succeeded + " succeeded.");
+                if (redirect_path) {
+                  progress.html(progress.html + "<a href='"+redirect_path +"'>Click to continue.</a>");
+                }
               }
             });
 
