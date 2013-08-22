@@ -122,7 +122,7 @@ $(document).ready(function() {
               $("#csv-import-errors").append(xhr.responseText);
             });
 
-          }, 100 * i);
+          }, import_row_delay * i);
 
           i++;
 

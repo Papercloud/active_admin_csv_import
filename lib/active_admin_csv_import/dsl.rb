@@ -16,6 +16,9 @@ module ActiveAdminCsvImport
         @redirect_path = options[:redirect_path].try(:call)
         @redirect_path ||= collection_path
 
+        @row_delay = options[:row_delay]
+        @row_delay ||= 100 # 100 ms
+
         render "admin/csv/import_csv"
       end
 
