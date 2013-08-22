@@ -71,7 +71,7 @@ $(document).ready(function() {
         var succeeded = 0;
         var i = 0;
 
-        _.each(data.records.models, function(record) {
+        _.each(data.records.models, function(record, index) {
 
           // Add a gap between each post to give the server
           // room to breathe
@@ -80,6 +80,7 @@ $(document).ready(function() {
             // Filter only the attributes we want, and normalise column names.
             var record_data = {};
             record_data[import_csv_resource_name] = {};
+            record_data["row"] = index;
 
             _.each(_.pairs(record.attributes), function(attr) {
               var underscored_name = _.underscored(attr[0]);
@@ -103,6 +104,9 @@ $(document).ready(function() {
                   progress.html(progress.text() + " <a href='"+redirect_path +"'>Click to continue.</a>");
                 }
               }
+            }).fail(function(xhr) {
+              // This row failed to import. Show the validation error.
+              $("#csv-import-errors").append(xhr.responseText);
             });
 
           }, 100 * i);

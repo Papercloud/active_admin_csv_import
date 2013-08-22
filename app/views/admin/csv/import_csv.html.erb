@@ -9,6 +9,7 @@
 <input id="csv-file-input" type="file">
 
 <div id="csv-import-progress"></div>
+<div id="csv-import-errors"></div>
 
 <script type="text/javascript">
   var import_csv_fields = <%= @fields.to_json.html_safe %>;
