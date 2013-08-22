@@ -20,8 +20,12 @@ $(document).ready(function() {
     $($file).wrap('<form>').closest('form').get(0).reset();
     $($file).unwrap();
 
+    // Clear progress
     var progress = $("#csv-import-progress");
     progress.text("");
+
+    // Clear validation errors
+    $("#csv-import-errors").html("");
   };
 
   // listen for the file to be submitted
@@ -82,10 +86,19 @@ $(document).ready(function() {
             record_data[import_csv_resource_name] = {};
             record_data["row"] = index;
 
+            // Construct the resource params with underscored keys
             _.each(_.pairs(record.attributes), function(attr) {
               var underscored_name = _.underscored(attr[0]);
               if (_.contains(wanted_columns, underscored_name)) {
-                record_data[import_csv_resource_name][underscored_name] = attr[1];
+
+                var value = attr[1];
+
+                // Prevent null values coming through as string 'null' so allow_blank works on validations.
+                if (value === null) {
+                  value = '';
+                }
+
+                record_data[import_csv_resource_name][underscored_name] = value;
               }
             });
 
