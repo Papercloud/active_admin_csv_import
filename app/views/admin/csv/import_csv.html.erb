@@ -1,6 +1,6 @@
 <%= javascript_include_tag "active_admin_csv_import/import_csv" %>
 
-<h3>Import <%= active_admin_config.resource_name.pluralize.humanize %> from a CSV File<h3>
+<h3>Import <%= active_admin_config.resource_name.to_s.pluralize.humanize %> from a CSV File<h3>
 <ul>
   <li>Save a CSV as 'Windows Comma Separated' from Excel.</li>
   <li>Your CSV should have the following column headings: <%= @fields.map(&:to_s).map(&:humanize).to_sentence %>. The order doesn't matter.</li>
@@ -14,6 +14,6 @@
 <script type="text/javascript">
   var import_csv_fields = <%= @fields.to_json.html_safe %>;
   var import_csv_path = <%= @post_path.to_json.html_safe %>;
-  var import_csv_resource_name = <%= active_admin_config.resource_name.underscore.to_json.html_safe %>;
+  var import_csv_resource_name = <%= active_admin_config.resource_name.to_s.underscore.to_json.html_safe %>;
   var redirect_path = <%= @redirect_path.to_json.html_safe %>;
 </script>
