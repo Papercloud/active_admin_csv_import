@@ -24,13 +24,21 @@ module ActiveAdminCsvImport
 
       # Receives each row and saves it
       collection_action :import_row, :method => :post do
-        @resource = active_admin_config.resource_class.new(permitted_params)
+        @resource = active_admin_config.resource_class.new(resource_params)
         @row_number = params["row"]
 
         if @resource.save
           render :nothing => true, :status => 201
         else
           render :partial => "admin/csv/import_csv_failed_row", :status => 422
+        end
+      end
+
+      def resource_params
+        if respond_to?(:permitted_params)
+          permitted_params
+        else
+          params[active_admin_config.resource_class.name.underscore]
         end
       end
 
