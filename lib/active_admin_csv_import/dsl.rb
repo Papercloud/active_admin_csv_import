@@ -24,7 +24,7 @@ module ActiveAdminCsvImport
 
       # Receives each row and saves it
       collection_action :import_row, :method => :post do
-        @resource = active_admin_config.resource_class.new(params[active_admin_config.resource_class.name.underscore])
+        @resource = active_admin_config.resource_class.new(permitted_params)
         @row_number = params["row"]
 
         if @resource.save
