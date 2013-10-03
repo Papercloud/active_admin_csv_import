@@ -17,3 +17,7 @@ pickle-email-*.html
 .DS_Store
 .ruby-gemset
 .ruby-version
+
+spec/rails
+Gemfile.lock
+Gemfile-*.lock

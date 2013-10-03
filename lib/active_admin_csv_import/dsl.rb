@@ -34,11 +34,14 @@ module ActiveAdminCsvImport
         end
       end
 
-      def resource_params
-        if respond_to?(:permitted_params)
-          permitted_params
-        else
-          params[active_admin_config.resource_class.name.underscore]
+      # Rails 4 Strong Parameters compatibility and backwards compatibility.
+      controller do
+        def resource_params
+          if respond_to?(:permitted_params)
+            permitted_params
+          else
+            params[active_admin_config.resource_class.name.underscore]
+          end
         end
       end
 
