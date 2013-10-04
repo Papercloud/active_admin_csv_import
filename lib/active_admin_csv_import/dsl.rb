@@ -2,6 +2,7 @@ module ActiveAdminCsvImport
   module DSL
 
     def csv_importable(options={})
+
       action_item :only => :index do
         link_to "Import #{active_admin_config.resource_name.to_s.pluralize}", :action => 'import_csv'
       end
@@ -24,7 +25,12 @@ module ActiveAdminCsvImport
 
       # Receives each row and saves it
       collection_action :import_row, :method => :post do
-        @resource = active_admin_config.resource_class.new(resource_params)
+
+        @resource = existing_row_resource(options[:import_unique_key])
+        @resource ||= active_admin_config.resource_class.new(resource_params)
+
+        @resource.attributes = resource_params
+
         @row_number = params["row"]
 
         if @resource.save
@@ -42,6 +48,14 @@ module ActiveAdminCsvImport
           else
             params[active_admin_config.resource_class.name.underscore]
           end
+        end
+
+        def existing_row_resource(lookup_column)
+          return unless lookup_column
+
+          finder_method = "find_by_#{lookup_column}".to_sym
+          finder_value = resource_params[lookup_column]
+          return active_admin_config.resource_class.send(finder_method, finder_value)
         end
       end
 

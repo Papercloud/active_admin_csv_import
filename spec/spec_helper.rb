@@ -5,7 +5,6 @@ ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
 require "bundler"
 Bundler.setup
 
-require 'detect_rails_version'
 ENV['RAILS'] = '3.2.13'
 
 ENV['RAILS_ENV'] = 'test'
