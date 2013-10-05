@@ -26,7 +26,7 @@ module ActiveAdminCsvImport
 
         @failures = []
 
-        resource_params.each do |row_params|
+        resource_params.values.each do |row_params|
           row_params = row_params.with_indifferent_access
           row_number = row_params.delete('_row')
   

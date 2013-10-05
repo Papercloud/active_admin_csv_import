@@ -135,19 +135,20 @@ $(document).ready(function() {
               // Show validation errors for any failed rows.
               $("#csv-import-errors").append(xhr.responseText);
 
-              if (loaded == total) {
-                progress.html("Done. Imported " + total + " records, " + succeeded + " succeeded.");
-                if (redirect_path) {
-                  progress.html(progress.text() + " <a href='" + redirect_path + "'>Click to continue.</a>");
+              if (xhr.status == 200) {
+                if (loaded == total) {
+                  progress.html("Done. Imported " + total + " records, " + succeeded + " succeeded.");
+                  if (redirect_path) {
+                    progress.html(progress.text() + " <a href='" + redirect_path + "'>Click to continue.</a>");
+                  }
+                } else {
+                  // Send the next batch!
+                  postRows(allRows, index + 1);
                 }
               } else {
-
-                // Send the next batch!
-                postRows(allRows, index + 1);
+                alert("Import interrupted. The server could not be reached or encountered an error.");
               }
 
-            }).fail(function(xhr) {
-              alert("Import interrupted. The server could not be reached or encountered an error.");
             });
         };
 
