@@ -3,7 +3,7 @@
 <h3>Import <%= active_admin_config.resource_name.to_s.pluralize.humanize %> from a CSV File<h3>
 <ul>
   <li>Save a CSV as 'Windows Comma Separated' from Excel.</li>
-  <li>Your CSV should have the following column headings: <%= @fields.map(&:to_s).map(&:humanize).to_sentence %>. The order doesn't matter.</li>
+  <li>Your CSV should have the following column headings: <%= @required_columns.map(&:to_s).map(&:humanize).to_sentence %>. The order doesn't matter.</li>
   <li>If a record already exists a duplicate will be created.</li>
 </ul>
 <input id="csv-file-input" type="file">
@@ -12,8 +12,8 @@
 <div id="csv-import-errors"></div>
 
 <script type="text/javascript">
-  var import_csv_fields = <%= @fields.to_json.html_safe %>;
-  var import_csv_required_fields = <%= @required_fields.to_json.html_safe %>;
+  var import_csv_columns = <%= @columns.to_json.html_safe %>;
+  var import_csv_required_columns = <%= @required_columns.to_json.html_safe %>;
   var import_csv_path = <%= @post_path.to_json.html_safe %>;
   var import_csv_resource_name = <%= active_admin_config.resource_name.to_s.underscore.to_json.html_safe %>;
   var redirect_path = <%= @redirect_path.to_json.html_safe %>;

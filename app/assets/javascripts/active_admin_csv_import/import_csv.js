@@ -55,8 +55,8 @@ $(document).ready(function() {
 
       // Check whether the CSV's columns match up with our data model.
       // import_csv_fields is passed in from Rails in import_csv.html.erb
-      var required_columns = import_csv_required_fields;
-      var all_columns = import_csv_fields;
+      var required_columns = import_csv_required_columns;
+      var all_columns = import_csv_columns;
       var csv_columns = _.pluck(data.records.first().fields.models, "id");
       var normalised_csv_columns = _.map(csv_columns, function(name) {
         return _.underscored(name);

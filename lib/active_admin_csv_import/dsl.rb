@@ -9,8 +9,8 @@ module ActiveAdminCsvImport
 
       # Shows the form and JS which accepts a CSV file, parses it and posts each row to the server.
       collection_action :import_csv do
-        @fields           = options[:columns] ||= active_admin_config.resource_class.columns.map(&:name) - ["id", "updated_at", "created_at"]
-        @required_fields  = options[:required_columns] ||= @fields
+        @columns           = options[:columns] ||= active_admin_config.resource_class.columns.map(&:name) - ["id", "updated_at", "created_at"]
+        @required_columns  = options[:required_columns] ||= @columns
 
         @post_path  = options[:path].try(:call)
         @post_path ||= collection_path + "/import_row"
