@@ -13,38 +13,45 @@ module ActiveAdminCsvImport
         @required_columns  = options[:required_columns] ||= @columns
 
         @post_path  = options[:path].try(:call)
-        @post_path ||= collection_path + "/import_row"
+        @post_path ||= collection_path + "/import_rows"
 
         @redirect_path = options[:redirect_path].try(:call)
         @redirect_path ||= collection_path
-
-        @row_delay = options[:row_delay]
-        @row_delay ||= 100 # 100 ms
 
         render "admin/csv/import_csv"
       end
 
       # Receives each row and saves it
-      collection_action :import_row, :method => :post do
+      collection_action :import_rows, :method => :post do
 
-        @resource = existing_row_resource(options[:import_unique_key])
-        @resource ||= active_admin_config.resource_class.new()
-        @row_number = params["row"]
+        @failures = []
 
-        if update_row_resource(@resource, resource_params)
-          render :nothing => true, :status => 201
-        else
-          render :partial => "admin/csv/import_csv_failed_row", :status => 422
+        resource_params.each do |row_params|
+          row_params = row_params.with_indifferent_access
+          row_number = row_params.delete('_row')
+  
+          resource = existing_row_resource(options[:import_unique_key], row_params)
+          resource ||= active_admin_config.resource_class.new()
+
+          if not update_row_resource(resource, row_params)
+            @failures << {
+              row_number: row_number,
+              resource: resource
+            }
+          end
         end
+
+        render :partial => "admin/csv/import_csv_failed_row", :status => 200
       end
 
       # Rails 4 Strong Parameters compatibility and backwards compatibility.
       controller do
         def resource_params
+          # I don't think this will work any more.
           if respond_to?(:permitted_params)
             permitted_params
           else
-            params[active_admin_config.resource_class.name.underscore]
+            params[active_admin_config.resource_class.name.pluralize.underscore]
           end
         end
 
@@ -58,12 +65,12 @@ module ActiveAdminCsvImport
           resource.save
         end
 
-        def existing_row_resource(lookup_column)
+        def existing_row_resource(lookup_column, params)
           return unless lookup_column
 
           finder_method = "find_by_#{lookup_column}".to_sym
-          finder_value = resource_params[lookup_column]
-          return active_admin_config.resource_class.send(finder_method, finder_value)
+          value = params[lookup_column]
+          return active_admin_config.resource_class.send(finder_method, value)
         end
       end
 

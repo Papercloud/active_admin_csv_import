@@ -40,9 +40,7 @@ Source: https://github.com/Papercloud/active-admin-csv-import-example
 
 ## Wishlist / TODOS
 
-1. Specify which columns to expect in the CSV.
-2. Specify a unique column which can be used to update a record rather than attempt to create a duplicate.
-3. Add Appraisal to test against multiple versions of Rails
+1. Add Appraisal to test against multiple versions of Rails
 
 ## Specs
 ```

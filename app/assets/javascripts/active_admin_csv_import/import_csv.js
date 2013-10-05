@@ -78,16 +78,25 @@ $(document).ready(function() {
         var succeeded = 0;
         var i = 0;
 
-        _.each(data.records.models, function(record, index) {
+        // Batch rows into 50s to send to the server
+        var n = 50;
+        var batchedModels = _.groupBy(data.records.models, function(a, b) {
+          return Math.floor(b / n);
+        });
 
-          // Add a gap between each post to give the server
-          // room to breathe
-          setTimeout(function() {
+        var rowIndex = 0;
+
+        var postRows = function(allRows, index) {
+          var currentBatch = allRows[index];
+
+          var records_data = [];
+
+          // Construct the payload for each row
+          _.each(currentBatch, function(record, i) {
 
             // Filter only the attributes we want, and normalise column names.
             var record_data = {};
-            record_data[import_csv_resource_name] = {};
-            record_data["row"] = index;
+            record_data["_row"] = rowIndex;
 
             // Construct the resource params with underscored keys
             _.each(_.pairs(record.attributes), function(attr) {
@@ -101,35 +110,48 @@ $(document).ready(function() {
                   value = '';
                 }
 
-                record_data[import_csv_resource_name][underscored_name] = value;
+                record_data[underscored_name] = value;
               }
             });
 
-            $.post(
-              import_csv_path,
-              record_data,
-              function(data) {
-                succeeded = succeeded + 1;
-              }).always(function() {
-              loaded = loaded + 1;
+            records_data.push(record_data);
+            rowIndex = rowIndex + 1;
+          });
+
+          var payload = {};
+          payload[import_csv_resource_name] = records_data;
+
+          // Send this batch to the server.
+          $.post(
+            import_csv_path,
+            payload,
+            function(data) {
+              succeeded = succeeded + currentBatch.length;
+            }, 'json')
+            .always(function(xhr) {
+              loaded = loaded + currentBatch.length;
               progress.text("Progress: " + loaded + " of " + total);
+
+              // Show validation errors for any failed rows.
+              $("#csv-import-errors").append(xhr.responseText);
 
               if (loaded == total) {
                 progress.html("Done. Imported " + total + " records, " + succeeded + " succeeded.");
                 if (redirect_path) {
                   progress.html(progress.text() + " <a href='" + redirect_path + "'>Click to continue.</a>");
                 }
+              } else {
+
+                // Send the next batch!
+                postRows(allRows, index + 1);
               }
+
             }).fail(function(xhr) {
-              // This row failed to import. Show the validation error.
-              $("#csv-import-errors").append(xhr.responseText);
+              alert("Import interrupted. The server could not be reached or encountered an error.");
             });
+        };
 
-          }, import_row_delay * i);
-
-          i++;
-
-        });
+        postRows(batchedModels, 0);
       }
 
       clearFileInput();
