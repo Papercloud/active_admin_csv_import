@@ -9,7 +9,8 @@ module ActiveAdminCsvImport
 
       # Shows the form and JS which accepts a CSV file, parses it and posts each row to the server.
       collection_action :import_csv do
-        @fields     = options[:columns] ||= active_admin_config.resource_class.columns.map(&:name) - ["id", "updated_at", "created_at"]
+        @fields           = options[:columns] ||= active_admin_config.resource_class.columns.map(&:name) - ["id", "updated_at", "created_at"]
+        @required_fields  = options[:required_columns] ||= @fields
 
         @post_path  = options[:path].try(:call)
         @post_path ||= collection_path + "/import_row"
@@ -27,13 +28,10 @@ module ActiveAdminCsvImport
       collection_action :import_row, :method => :post do
 
         @resource = existing_row_resource(options[:import_unique_key])
-        @resource ||= active_admin_config.resource_class.new(resource_params)
-
-        @resource.attributes = resource_params
-
+        @resource ||= active_admin_config.resource_class.new()
         @row_number = params["row"]
 
-        if @resource.save
+        if update_row_resource(@resource, resource_params)
           render :nothing => true, :status => 201
         else
           render :partial => "admin/csv/import_csv_failed_row", :status => 422
@@ -48,6 +46,16 @@ module ActiveAdminCsvImport
           else
             params[active_admin_config.resource_class.name.underscore]
           end
+        end
+
+        # Updates a resource with the CSV data and saves it.
+        #
+        # @param resource [Object] the object to save
+        # @param params [Hash] the CSV row
+        # @return [Boolean] Success
+        def update_row_resource(resource, params)
+          resource.attributes = params
+          resource.save
         end
 
         def existing_row_resource(lookup_column)

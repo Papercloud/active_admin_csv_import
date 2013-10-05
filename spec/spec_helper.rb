@@ -28,3 +28,31 @@ ActiveAdmin.application.authentication_method = false
 ActiveAdmin.application.current_user_method = false
 
 require 'rspec/rails'
+require 'capybara/rails'
+require 'capybara/rspec'
+require 'capybara/poltergeist'
+
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app, {
+    js_errors: true,
+    timeout: 80,
+    phantomjs_options: ['--load-images=no'],
+  })
+end
+Capybara.javascript_driver = :poltergeist
+
+RSpec.configure do |config|
+  config.use_transactional_fixtures = false
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean_with(:truncation)
+  end
+  config.before(:each) do
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.start
+  end
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
+end

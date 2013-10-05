@@ -49,18 +49,21 @@ $(document).ready(function() {
       }
 
       // Re-query to get all records. Otherwise recline.js defaults to just 100.
-      dataset.query({size: dataset.recordCount});
+      dataset.query({
+        size: dataset.recordCount
+      });
 
       // Check whether the CSV's columns match up with our data model.
       // import_csv_fields is passed in from Rails in import_csv.html.erb
-      var wanted_columns = import_csv_fields;
+      var required_columns = import_csv_required_fields;
+      var all_columns = import_csv_fields;
       var csv_columns = _.pluck(data.records.first().fields.models, "id");
       var normalised_csv_columns = _.map(csv_columns, function(name) {
         return _.underscored(name);
       });
 
       // Check we have all the columns we want.
-      var missing_columns = _.difference(wanted_columns, normalised_csv_columns);
+      var missing_columns = _.difference(required_columns, normalised_csv_columns);
       var missing_columns_humanized = _.map(missing_columns, function(name) {
         return _.humanize(name);
       });
@@ -79,7 +82,7 @@ $(document).ready(function() {
 
           // Add a gap between each post to give the server
           // room to breathe
-          setTimeout(function () {
+          setTimeout(function() {
 
             // Filter only the attributes we want, and normalise column names.
             var record_data = {};
@@ -89,7 +92,7 @@ $(document).ready(function() {
             // Construct the resource params with underscored keys
             _.each(_.pairs(record.attributes), function(attr) {
               var underscored_name = _.underscored(attr[0]);
-              if (_.contains(wanted_columns, underscored_name)) {
+              if (_.contains(all_columns, underscored_name)) {
 
                 var value = attr[1];
 
@@ -103,18 +106,18 @@ $(document).ready(function() {
             });
 
             $.post(
-            import_csv_path,
-            record_data,
-            function(data) {
-              succeeded = succeeded + 1;
-            }).always(function() {
+              import_csv_path,
+              record_data,
+              function(data) {
+                succeeded = succeeded + 1;
+              }).always(function() {
               loaded = loaded + 1;
               progress.text("Progress: " + loaded + " of " + total);
 
               if (loaded == total) {
                 progress.html("Done. Imported " + total + " records, " + succeeded + " succeeded.");
                 if (redirect_path) {
-                  progress.html(progress.text() + " <a href='"+redirect_path +"'>Click to continue.</a>");
+                  progress.html(progress.text() + " <a href='" + redirect_path + "'>Click to continue.</a>");
                 }
               }
             }).fail(function(xhr) {

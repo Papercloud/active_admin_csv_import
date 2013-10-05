@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/bmabey/database_cleaner.git
+  revision: 1ce7c9989acd4815621fe9a007fc4b759a37b239
+  ref: 1ce7c9989acd4815621fe9a007fc4b759a37b239
+  specs:
+    database_cleaner (1.1.1)
+
 PATH
   remote: .
   specs:
@@ -46,6 +53,7 @@ GEM
     activesupport (3.2.13)
       i18n (= 0.6.1)
       multi_json (~> 1.0)
+    addressable (2.3.5)
     arbre (1.0.1)
       activesupport (>= 3.0.0)
     arel (3.0.2)
@@ -55,6 +63,19 @@ GEM
       sass (>= 3.2.0)
       thor
     builder (3.0.4)
+    capybara (2.1.0)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (~> 2.0)
+    coffee-rails (3.2.2)
+      coffee-script (>= 2.2.0)
+      railties (~> 3.2.0)
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.6.3)
     devise (3.1.1)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -63,12 +84,18 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.2.4)
     erubis (2.7.0)
+    eventmachine (1.0.3)
+    execjs (1.4.0)
+      multi_json (~> 1.0)
+    faye-websocket (0.4.7)
+      eventmachine (>= 0.12.0)
     formtastic (2.2.1)
       actionpack (>= 3.0)
     has_scope (0.6.0.rc)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
     hike (1.2.3)
+    http_parser.rb (0.5.3)
     i18n (0.6.1)
     inherited_resources (1.4.1)
       has_scope (~> 0.6.0.rc)
@@ -81,6 +108,8 @@ GEM
     kaminari (0.14.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    launchy (2.3.0)
+      addressable (~> 2.3)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -91,7 +120,12 @@ GEM
       polyamorous (~> 0.5.0)
     mime-types (1.25)
     multi_json (1.8.0)
+    nokogiri (1.5.10)
     orm_adapter (0.4.0)
+    poltergeist (1.3.0)
+      capybara (~> 2.1.0)
+      faye-websocket (>= 0.4.4, < 0.5.0)
+      http_parser.rb (~> 0.5.3)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
@@ -154,6 +188,8 @@ GEM
     tzinfo (0.3.37)
     warden (1.2.3)
       rack (>= 1.0)
+    xpath (2.0.0)
+      nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
@@ -161,6 +197,12 @@ PLATFORMS
 DEPENDENCIES
   active_admin_csv_import!
   activeadmin
+  capybara (>= 2.0.2)
+  coffee-rails
+  database_cleaner!
+  jquery-rails
+  launchy (>= 2.1.2)
+  poltergeist (~> 1.3.0)
   rails (= 3.2.13)
   rspec-rails
   sass-rails
