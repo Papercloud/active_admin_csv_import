@@ -48,9 +48,9 @@ $(document).ready(function() {
         return;
       }
 
-      // Re-query to get all records. Otherwise recline.js defaults to just 100.
+      // Re-query to just one record so we can check the headers.
       dataset.query({
-        size: dataset.recordCount
+        size: 1
       });
 
       // Check whether the CSV's columns match up with our data model.
@@ -79,15 +79,21 @@ $(document).ready(function() {
         var i = 0;
 
         // Batch rows into 50s to send to the server
-        var n = 50;
-        var batchedModels = _.groupBy(data.records.models, function(a, b) {
-          return Math.floor(b / n);
-        });
+        // var n = 50;
+        // var batchedModels = _.groupBy(data.records.models, function(a, b) {
+        //   return Math.floor(b / n);
+        // });
 
         var rowIndex = 0;
 
-        var postRows = function(allRows, index) {
-          var currentBatch = allRows[index];
+        var postRows = function(dataset, index) {
+
+          // Query the data set for the next batch of rows.
+          dataset.query({
+            size: 100,
+            from: 100 * index
+          });
+          var currentBatch = data.records.models;
 
           var records_data = [];
 
@@ -142,7 +148,7 @@ $(document).ready(function() {
                   }
                 } else {
                   // Send the next batch!
-                  postRows(allRows, index + 1);
+                  postRows(dataset, index + 1);
                 }
               } else {
                 alert("Import interrupted. The server could not be reached or encountered an error.");
@@ -151,7 +157,8 @@ $(document).ready(function() {
             });
         };
 
-        postRows(batchedModels, 0);
+
+        postRows(dataset, 0);
       }
 
       clearFileInput();
