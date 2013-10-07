@@ -70,6 +70,8 @@ module ActiveAdminCsvImport
 
           finder_method = "find_by_#{lookup_column}".to_sym
           value = params[lookup_column]
+          return unless value.present?
+
           return active_admin_config.resource_class.send(finder_method, value)
         end
       end

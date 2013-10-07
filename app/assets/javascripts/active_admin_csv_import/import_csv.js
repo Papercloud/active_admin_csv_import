@@ -125,9 +125,8 @@ $(document).ready(function() {
           $.post(
             import_csv_path,
             payload,
-            function(data) {
-              succeeded = succeeded + currentBatch.length;
-            }, 'json')
+            null,
+            'json')
             .always(function(xhr) {
               loaded = loaded + currentBatch.length;
               progress.text("Progress: " + loaded + " of " + total);
@@ -137,7 +136,7 @@ $(document).ready(function() {
 
               if (xhr.status == 200) {
                 if (loaded == total) {
-                  progress.html("Done. Imported " + total + " records, " + succeeded + " succeeded.");
+                  progress.html("Done. Imported " + total + " records.");
                   if (redirect_path) {
                     progress.html(progress.text() + " <a href='" + redirect_path + "'>Click to continue.</a>");
                   }
