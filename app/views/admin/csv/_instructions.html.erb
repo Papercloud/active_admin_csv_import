@@ -1,5 +1,5 @@
 <h3>Import <%= active_admin_config.resource_name.to_s.pluralize.humanize %> from a CSV File<h3>
 <ul>
   <li>Save a CSV as 'Windows Comma Separated' from Excel.</li>
-  <li>Your CSV should have the following column headings: <%= @required_columns.map(&:to_s).map(&:humanize).to_sentence %>. The order doesn't matter.</li>
+  <li>Your CSV should have the following column headings: <%= @required_columns.to_sentence %>. The order doesn't matter.</li>
 </ul>
