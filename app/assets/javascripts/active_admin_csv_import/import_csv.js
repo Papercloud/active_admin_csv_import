@@ -37,6 +37,7 @@ $(document).ready(function() {
     // create the dataset in the usual way but specifying file attribute
     var dataset = new recline.Model.Dataset({
       file: $file.files[0],
+      delimiter: import_csv_delimiter,
       backend: 'csv'
     });
 
