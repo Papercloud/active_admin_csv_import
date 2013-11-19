@@ -38,6 +38,10 @@ password
 ```
 Source: https://github.com/Papercloud/active-admin-csv-import-example
 
+## Use other delimiter than semicolon
+
+In `config/initializers/active_admin.rb`, search `csv_options` and set the csv separator as it's showed in the file.
+
 ## Wishlist / TODOS
 
 1. Add Appraisal to test against multiple versions of Rails

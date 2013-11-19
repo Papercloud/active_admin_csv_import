@@ -1,5 +1,9 @@
-<h3>Import <%= active_admin_config.resource_name.to_s.pluralize.humanize %> from a CSV File<h3>
+<h3>
+  <%= t('.import_from_csv_file',
+        resource_name: active_admin_config.resource_name.to_s.pluralize.humanize,
+        default: 'Import %{resource_name} from a CSV File' ) %>
+</h3>
 <ul>
-  <li>Save a CSV as 'Windows Comma Separated' from Excel.</li>
-  <li>Your CSV should have the following column headings: <%= @required_columns.map(&:to_s).map(&:humanize).to_sentence %>. The order doesn't matter.</li>
+  <li><%= t('.file_type', default: "Save a CSV as 'Windows Comma Separated' from Excel.") %></li>
+  <li><%= t('.must_have_headings', columns: @required_columns.to_sentence, default: "Your CSV should have the following column headings: %{columns}. The order doesn't matter.") %></li>
 </ul>
