@@ -15,9 +15,9 @@ describe Admin::StoresController do
     it "should save a row of imported data" do
 
       lambda {
-          post :import_rows, { stores: { 0 => {name: "bob"}}}
+          post :import_rows, { store: { 0 => {name: "bob"}}}
       }.should change{Store.count}.by(1)
-      
+
     end
   end
 
@@ -31,7 +31,7 @@ describe Admin::StoresController do
       store.should_receive(:save)
 
       post :import_rows, {
-        stores: {
+        store: {
           0 => {
           name: "Bobby",
           unique_key: '123'
@@ -40,6 +40,6 @@ describe Admin::StoresController do
 
       store.name.should eq 'Bobby'
     end
- 
+
   end
 end

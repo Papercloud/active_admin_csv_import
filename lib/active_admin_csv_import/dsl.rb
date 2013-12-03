@@ -29,7 +29,7 @@ module ActiveAdminCsvImport
         resource_params.values.each do |row_params|
           row_params = row_params.with_indifferent_access
           row_number = row_params.delete('_row')
-  
+
           resource = existing_row_resource(options[:import_unique_key], row_params)
           resource ||= active_admin_config.resource_class.new()
 
@@ -49,9 +49,9 @@ module ActiveAdminCsvImport
         def resource_params
           # I don't think this will work any more.
           if respond_to?(:permitted_params)
-            permitted_params
+            permitted_params[active_admin_config.resource_class.name.underscore]
           else
-            params[active_admin_config.resource_class.name.pluralize.underscore]
+            params[active_admin_config.resource_class.name.underscore]
           end
         end
 
