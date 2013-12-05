@@ -26,7 +26,7 @@ module ActiveAdminCsvImport
 
         @failures = []
 
-        resource_params.values.each do |row_params|
+        csv_resource_params.values.each do |row_params|
           row_params = row_params.with_indifferent_access
           row_number = row_params.delete('_row')
 
@@ -46,7 +46,7 @@ module ActiveAdminCsvImport
 
       # Rails 4 Strong Parameters compatibility and backwards compatibility.
       controller do
-        def resource_params
+        def csv_resource_params
           # I don't think this will work any more.
           if respond_to?(:permitted_params)
             permitted_params[active_admin_config.resource_class.name.underscore]
