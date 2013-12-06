@@ -71,7 +71,6 @@ this.recline.Backend.CSV = this.recline.Backend.CSV || {};
     var trm = (options.trim === false) ? false : true;
     var separator = options.separator || ',';
     var delimiter = options.delimiter || '"';
-    debugger;
     var cur = '', // The character we are currently processing.
       inQuote = false,
       fieldQuoted = false,

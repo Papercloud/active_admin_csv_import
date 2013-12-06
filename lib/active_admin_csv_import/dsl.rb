@@ -18,6 +18,8 @@ module ActiveAdminCsvImport
         @redirect_path = options[:redirect_path].try(:call)
         @redirect_path ||= collection_path
 
+        @delimiter = options[:delimiter]
+
         render "admin/csv/import_csv"
       end
 
