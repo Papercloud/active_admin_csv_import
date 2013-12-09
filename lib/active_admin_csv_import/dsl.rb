@@ -18,6 +18,8 @@ module ActiveAdminCsvImport
         @redirect_path = options[:redirect_path].try(:call)
         @redirect_path ||= collection_path
 
+        @delimiter = options[:delimiter]
+
         render "admin/csv/import_csv"
       end
 
@@ -26,10 +28,10 @@ module ActiveAdminCsvImport
 
         @failures = []
 
-        resource_params.values.each do |row_params|
+        csv_resource_params.values.each do |row_params|
           row_params = row_params.with_indifferent_access
           row_number = row_params.delete('_row')
-  
+
           resource = existing_row_resource(options[:import_unique_key], row_params)
           resource ||= active_admin_config.resource_class.new()
 
@@ -46,12 +48,12 @@ module ActiveAdminCsvImport
 
       # Rails 4 Strong Parameters compatibility and backwards compatibility.
       controller do
-        def resource_params
+        def csv_resource_params
           # I don't think this will work any more.
           if respond_to?(:permitted_params)
-            permitted_params
+            permitted_params[active_admin_config.resource_class.name.underscore]
           else
-            params[active_admin_config.resource_class.name.pluralize.underscore]
+            params[active_admin_config.resource_class.name.underscore]
           end
         end
 

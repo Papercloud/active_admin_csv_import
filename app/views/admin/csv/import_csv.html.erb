@@ -11,7 +11,7 @@
   var import_csv_columns = <%= @columns.to_json.html_safe %>;
   var import_csv_required_columns = <%= @required_columns.to_json.html_safe %>;
   var import_csv_path = <%= @post_path.to_json.html_safe %>;
-  var import_csv_resource_name = <%= active_admin_config.resource_name.to_s.pluralize.underscore.to_json.html_safe %>;
+  var import_csv_resource_name = <%= active_admin_config.resource_name.to_s.underscore.to_json.html_safe %>;
   var redirect_path = <%= @redirect_path.to_json.html_safe %>;
-  var import_csv_delimiter = "<%= ActiveAdmin.application.csv_options[:col_sep] || ';'  %>";
+  var import_csv_delimiter = <%= @delimiter ? @delimiter.to_json.html_safe : "null" %>;
 </script>

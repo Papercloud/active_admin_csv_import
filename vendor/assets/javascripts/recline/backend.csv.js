@@ -27,7 +27,7 @@ this.recline.Backend.CSV = this.recline.Backend.CSV || {};
           useMemoryStore: true
         });
       };
-      reader.onerror = function (e) {
+      reader.onerror = function(e) {
         alert('Failed to load file. Code: ' + e.target.error.code);
       };
       reader.readAsText(dataset.file, encoding);
@@ -56,14 +56,14 @@ this.recline.Backend.CSV = this.recline.Backend.CSV || {};
   //
   // @return The CSV parsed as an array
   // @type Array
-  // 
+  //
   // @param {String} s The string to convert
   // @param {Object} options Options for loading CSV including
   // 	@param {Boolean} [trim=false] If set to True leading and trailing whitespace is stripped off of each non-quoted field as it is imported
   //	@param {String} [separator=','] Separator for CSV file
   // Heavily based on uselesscode's JS CSV parser (MIT Licensed):
   // http://www.uselesscode.org/javascript/csv/
-  my.parseCSV= function(s, options) {
+  my.parseCSV = function(s, options) {
     // Get rid of any trailing \n
     s = chomp(s);
 
@@ -71,7 +71,6 @@ this.recline.Backend.CSV = this.recline.Backend.CSV || {};
     var trm = (options.trim === false) ? false : true;
     var separator = options.separator || ',';
     var delimiter = options.delimiter || '"';
-
     var cur = '', // The character we are currently processing.
       inQuote = false,
       fieldQuoted = false,
@@ -81,12 +80,12 @@ this.recline.Backend.CSV = this.recline.Backend.CSV || {};
       i,
       processField;
 
-    processField = function (field) {
+    processField = function(field) {
       if (fieldQuoted !== true) {
         // If field is empty set to null
         if (field === '') {
           field = null;
-        // If the field was not quoted and we are trimming fields, trim it
+          // If the field was not quoted and we are trimming fields, trim it
         } else if (trm === true) {
           field = trim(field);
         }
@@ -106,7 +105,7 @@ this.recline.Backend.CSV = this.recline.Backend.CSV || {};
 
       // If we are at a EOF or EOR
       if (inQuote === false && (cur === separator || cur === "\n")) {
-	field = processField(field);
+        field = processField(field);
         // Add the current field to the current row
         row.push(field);
         // If this is EOR append row to output and flush row
@@ -155,14 +154,14 @@ this.recline.Backend.CSV = this.recline.Backend.CSV || {};
     // contains a comma double quote or a newline
     // it needs to be quoted in CSV output
     rxNeedsQuoting = /^\s|\s$|,|"|\n/,
-    trim = (function () {
+    trim = (function() {
       // Fx 3.1 has a native trim function, it's about 10x faster, use it if it exists
       if (String.prototype.trim) {
-        return function (s) {
+        return function(s) {
           return s.trim();
         };
       } else {
-        return function (s) {
+        return function(s) {
           return s.replace(/^\s*/, '').replace(/\s*$/, '');
         };
       }
