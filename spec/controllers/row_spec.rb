@@ -1,11 +1,6 @@
 require 'spec_helper'
 
-ActiveAdmin.register Store do
-  csv_importable import_unique_key: :unique_key,
-                  required_columns: [:name, :unique_key],
-                  columns: [:name, :unique_key, :location]
-end
-Rails.application.reload_routes!
+add_store_admin
 
 describe Admin::StoresController do
 
