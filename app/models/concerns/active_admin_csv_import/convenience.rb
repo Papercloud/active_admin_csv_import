@@ -1,4 +1,4 @@
-module Convenience
+module ActiveAdminCsvImport::Convenience
   extend ActiveSupport::Concern
 
   module ClassMethods
