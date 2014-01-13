@@ -4,6 +4,7 @@
         default: 'Import %{resource_name} from a CSV File' ) %>
 </h3>
 <ul>
-  <li><%= t('.file_type', default: "Save a CSV as 'Windows Comma Separated' from Excel.") %></li>
-  <li><%= t('.must_have_headings', columns: @required_columns.to_sentence, default: "Your CSV should have the following column headings: %{columns}. The order doesn't matter.") %></li>
+  <li><%= t('.file_type', default: "Save a CSV as 'Windows Comma Separated' from Excel if you're on Mac, or 'CSV' otherwise.") %></li>
+  <li><%= t('.must_have_headings', columns: @required_columns.map(&:to_s).map(&:humanize).to_sentence, default: "Your CSV should have the following column headings: %{columns}. The order doesn't matter.") %></li>
+  <li><%= link_to(t('.example_link', default: "Download an example"), url_for(:controller => controller_name, :action => 'example_csv')) %></li>
 </ul>

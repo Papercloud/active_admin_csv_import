@@ -1,16 +1,32 @@
+require 'csv'
+
 module ActiveAdminCsvImport
   module DSL
 
     def csv_importable(options={})
 
+      # All columns
+      columns = options[:columns] ||= active_admin_config.resource_class.columns.map(&:name) - ["id", "updated_at", "created_at"]
+
+      # Required columns. A subset of all columns. A client-side validation error is raised if one of these is not found.
+      required_columns = options[:required_columns] ||= columns
+
       action_item :only => :index do
         link_to "Import #{active_admin_config.resource_name.to_s.pluralize}", :action => 'import_csv'
       end
 
+      # Returns an example CSV based on the columns expected for import.
+      collection_action :example_csv do
+        csv_column_names = CSV.generate do |csv|
+          csv << columns.map(&:to_s).map(&:humanize)
+        end
+        send_data(csv_column_names, :type => 'text/csv; charset=utf-8; header=present', :filename => active_admin_config.resource_class.name.to_s.pluralize + ".csv")
+      end
+
       # Shows the form and JS which accepts a CSV file, parses it and posts each row to the server.
       collection_action :import_csv do
-        @columns           = options[:columns] ||= active_admin_config.resource_class.columns.map(&:name) - ["id", "updated_at", "created_at"]
-        @required_columns  = options[:required_columns] ||= @columns
+        @columns           = columns
+        @required_columns  = required_columns
 
         @post_path  = options[:path].try(:call)
         @post_path ||= collection_path + "/import_rows"
