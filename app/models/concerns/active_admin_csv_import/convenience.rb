@@ -17,7 +17,7 @@ module ActiveAdminCsvImport::Convenience
 
       def lookup_#{name}_by_#{lookup_by}
         return if self.#{name}_#{lookup_by}.blank?
-        self.#{name} = '#{name}'.capitalize.constantize.where(#{lookup_by}: self.#{name}_#{lookup_by}).first
+        self.#{name} = '#{name}'.camelize.constantize.where(#{lookup_by}: self.#{name}_#{lookup_by}).first
       end
       eoruby
       class_eval(code)
