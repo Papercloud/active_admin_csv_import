@@ -23,7 +23,8 @@ Add 'csv_importable' into your active admin resource:
 
 ```
 ActiveAdmin.register Thing do
-  csv_importable
+  csv_importable :columns => [:code, :name, :state_name],
+                              :import_unique_key => :code
 end
 ```
 
