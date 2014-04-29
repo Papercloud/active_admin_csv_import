@@ -47,7 +47,7 @@ describe 'import', :type => :feature, :js => true do
     page.should have_content "Done"
   end
 
-  it "sends  a CSV separated by semicolons" do
+  it "sends a CSV separated by semicolons" do
     add_store_admin(delimiter: ";")
     Admin::StoresController.any_instance.should_receive(:update_row_resource).
                             with(
@@ -61,6 +61,17 @@ describe 'import', :type => :feature, :js => true do
 
     attach_file('csv-file-input', File.expand_path('./spec/fixtures/csvs/separated_by_semicolon.csv'))
     page.should have_content "Done"
+  end
+
+  it "sets default columns if none are specified" do
+    ActiveAdmin.register Store do
+      csv_importable
+    end
+    Rails.application.reload_routes!
+    
+    visit import_csv_admin_stores_path
+    page.should have_content "Name"
+    page.should have_content "Unique key"
   end
 
 end
