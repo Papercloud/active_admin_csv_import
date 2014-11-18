@@ -2,17 +2,17 @@ require 'csv'
 
 module ActiveAdminCsvImport
   module DSL
-
-    def csv_importable(options={})
-
+    def csv_importable(options = {})
       # All columns
-      columns = options[:columns] ||= active_admin_config.resource_class.columns.map(&:name) - ["id", "updated_at", "created_at"]
+      columns = options[:columns] ||= active_admin_config.resource_class.columns.map(&:name) - %(id updated_at created_at)
 
-      # Required columns. A subset of all columns. A client-side validation error is raised if one of these is not found.
+      # Required columns. A subset of all columns.
+      # A client-side validation error is raised if one of these is not found.
       required_columns = options[:required_columns] ||= columns
 
-      action_item :only => :index do
-        link_to "Import #{active_admin_config.resource_name.to_s.pluralize}", :action => 'import_csv'
+      action_item only: :index do
+        link_to "Import #{active_admin_config.resource_name.to_s.pluralize}",
+                action: 'import_csv'
       end
 
       # Returns an example CSV based on the columns expected for import.
@@ -20,27 +20,31 @@ module ActiveAdminCsvImport
         csv_column_names = CSV.generate do |csv|
           csv << columns.map(&:to_s).map(&:humanize)
         end
-        send_data(csv_column_names, :type => 'text/csv; charset=utf-8; header=present', :filename => active_admin_config.resource_class.name.to_s.pluralize + ".csv")
+        send_data(csv_column_names,
+                  type: 'text/csv; charset=utf-8; header=present',
+                  filename: active_admin_config
+                            .resource_class.name.to_s.pluralize + '.csv')
       end
 
-      # Shows the form and JS which accepts a CSV file, parses it and posts each row to the server.
+      # Shows the form and JS which accepts a CSV file,
+      # parses it and posts each row to the server.
       collection_action :import_csv do
         @columns           = columns
         @required_columns  = required_columns
 
         @post_path  = options[:path].try(:call)
-        @post_path ||= collection_path + "/import_rows"
+        @post_path ||= collection_path + '/import_rows'
 
         @redirect_path = options[:redirect_path].try(:call)
         @redirect_path ||= collection_path
 
         @delimiter = options[:delimiter]
 
-        render "admin/csv/import_csv"
+        render 'admin/csv/import_csv'
       end
 
       # Receives each row and saves it
-      collection_action :import_rows, :method => :post do
+      collection_action :import_rows, method: :post do
 
         @failures = []
 
@@ -49,9 +53,9 @@ module ActiveAdminCsvImport
           row_number = row_params.delete('_row')
 
           resource = existing_row_resource(options[:import_unique_key], row_params)
-          resource ||= active_admin_config.resource_class.new()
+          resource ||= active_admin_config.resource_class.new
 
-          if not update_row_resource(resource, row_params)
+          unless update_row_resource(resource, row_params)
             @failures << {
               row_number: row_number,
               resource: resource
@@ -59,7 +63,7 @@ module ActiveAdminCsvImport
           end
         end
 
-        render :partial => "admin/csv/import_csv_failed_row", :status => 200
+        render partial: 'admin/csv/import_csv_failed_row', status: 200
       end
 
       # Rails 4 Strong Parameters compatibility and backwards compatibility.
@@ -90,11 +94,9 @@ module ActiveAdminCsvImport
           value = params[lookup_column]
           return unless value.present?
 
-          return active_admin_config.resource_class.send(finder_method, value)
+          active_admin_config.resource_class.send(finder_method, value)
         end
       end
-
     end
-
   end
 end
