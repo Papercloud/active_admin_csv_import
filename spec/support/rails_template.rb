@@ -2,6 +2,8 @@
 
 generate :model, 'store name:string unique_key:string'
 
+inject_into_file "app/models/store.rb", "\nattr_accessor :location", after: "class Store < ActiveRecord::Base"
+
 # Configure default_url_options in test environment
 inject_into_file "config/environments/test.rb", "  config.action_mailer.default_url_options = { :host => 'example.com' }\n", :after => "config.cache_classes = true\n"
 
@@ -13,11 +15,11 @@ run "rm Gemfile"
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 # we need this routing path, named "logout_path", for testing
-route <<-EOS
-  devise_scope :user do
-    match '/admin/logout' => 'active_admin/devise/sessions#destroy', :as => :logout
-  end
-EOS
+# route <<-EOS
+#   devise_scope :user do
+#     match '/admin/logout' => 'active_admin/devise/sessions#destroy', :as => :logout
+#   end
+# EOS
 
 generate :'active_admin:install'
 
@@ -28,6 +30,4 @@ run "rm -r spec"
 route "root :to => 'admin/dashboard#index'"
 
 rake "db:migrate"
-rake "db:test:prepare"
-# run "/usr/bin/env RAILS_ENV=cucumber rake db:migrate"
 
