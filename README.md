@@ -1,11 +1,17 @@
 ActiveAdminCSVImport
 =======================
 
+[![Build Status](https://travis-ci.org/Papercloud/active_admin_csv_import.svg?branch=master)](https://travis-ci.org/Papercloud/active_admin_csv_import)
+
 - Add CSV import with one line of code
 - Parses the file client-side and imports line-by-line to avoid Heroku timeouts
 - Validates the CSV has the correct column names before importing.
 
 Inspired by https://github.com/krhorst/active_admin_importable and makes use of Recline.js. This is a relatively heavy solution with a lot of JS dependencies, but should be easier for large imports on Heroku than first uploading to a file server.
+
+## Compatibility
+
+As of v2.0.0 Active Admin master with Rails 4.1 is supported. For older versions of Active Admin use v1 of active_admin_csv_import.
 
 ## Installation
 
