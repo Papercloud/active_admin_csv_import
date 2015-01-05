@@ -11,7 +11,7 @@ module ActiveAdminCsvImport
       # Required columns. A subset of all columns. A client-side validation error is raised if one of these is not found.
       required_columns = options[:required_columns] ||= columns
 
-      action_item :only => :index do
+      action_item :import_csv, :only => :index do
         link_to "Import #{active_admin_config.resource_name.to_s.pluralize}", :action => 'import_csv'
       end
 

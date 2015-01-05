@@ -5,7 +5,7 @@ ENV['BUNDLE_GEMFILE'] = File.expand_path('../../Gemfile', __FILE__)
 require "bundler"
 Bundler.setup
 
-ENV['RAILS'] = '3.2.13'
+ENV['RAILS'] = '4.1.8'
 
 ENV['RAILS_ENV'] = 'test'
 ENV['RAILS_ROOT'] = File.expand_path("../rails/rails-#{ENV['RAILS']}", __FILE__)
@@ -17,6 +17,7 @@ end
 
 # Ensure the Active Admin load path is happy
 require 'rails'
+require 'active_model'
 require 'active_admin'
 ActiveAdmin.application.load_paths = [ENV['RAILS_ROOT'] + "/app/admin"]
 

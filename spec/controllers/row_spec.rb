@@ -2,28 +2,28 @@ require 'spec_helper'
 
 add_store_admin
 
-describe Admin::StoresController do
+describe Admin::StoresController, type: :controller do
 
   let(:controller) { Admin::StoresController.new }
 
   describe "import row" do
-    it "should save a row of imported data" do
+    it "saves a row of imported data" do
 
-      lambda {
+      expect {
           post :import_rows, { store: { 0 => {name: "bob"}}}
-      }.should change{Store.count}.by(1)
+      }.to change{Store.count}.by(1)
 
     end
   end
 
   describe "import an updated row" do
 
-    it "should not create a new row" do
+    it "does not create a new row" do
 
       store = Store.new({name: "bob", unique_key: 123})
-      Store.should_receive(:find_by_unique_key).and_return(store)
+      expect(Store).to receive(:find_by_unique_key).and_return(store)
 
-      store.should_receive(:save)
+      expect(store).to receive(:save)
 
       post :import_rows, {
         store: {
@@ -33,7 +33,7 @@ describe Admin::StoresController do
         }}
       }
 
-      store.name.should eq 'Bobby'
+      expect(store.name).to eq 'Bobby'
     end
 
   end
