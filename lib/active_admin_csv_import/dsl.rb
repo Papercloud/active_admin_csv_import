@@ -94,7 +94,7 @@ module ActiveAdminCsvImport
           value = params[lookup_column]
           return unless value.present?
 
-          active_admin_config.resource_class.send(finder_method, value)
+          scoped_collection.send(finder_method, value)
         end
       end
     end
