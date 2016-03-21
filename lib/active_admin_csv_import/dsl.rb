@@ -31,12 +31,13 @@ module ActiveAdminCsvImport
       collection_action :import_csv do
         @columns           = columns
         @required_columns  = required_columns
+        @collection_path   = parent ? collection_path(params.slice("#{parent.class.name.downcase}_id")) : collection_path
 
         @post_path  = options[:path].try(:call)
-        @post_path ||= collection_path + '/import_rows'
+        @post_path ||= @collection_path + '/import_rows'
 
         @redirect_path = options[:redirect_path].try(:call)
-        @redirect_path ||= collection_path
+        @redirect_path ||= @collection_path
 
         @delimiter = options[:delimiter]
 
