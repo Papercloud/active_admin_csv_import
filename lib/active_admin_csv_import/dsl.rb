@@ -31,7 +31,7 @@ module ActiveAdminCsvImport
       collection_action :import_csv do
         @columns           = columns
         @required_columns  = required_columns
-        @collection_path   = parent ? collection_path(params.slice("#{parent.class.name.downcase}_id")) : collection_path
+        @collection_path   = parent ? collection_path({"#{parent.class.name.underscore}_id" => parent.id}) : collection_path
 
         @post_path  = options[:path].try(:call)
         @post_path ||= @collection_path + '/import_rows'
