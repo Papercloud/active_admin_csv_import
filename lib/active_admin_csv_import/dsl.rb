@@ -31,12 +31,13 @@ module ActiveAdminCsvImport
       collection_action :import_csv do
         @columns           = columns
         @required_columns  = required_columns
+        @collection_path   = parent ? collection_path({"#{parent.class.name.underscore}_id" => parent.id}) : collection_path
 
         @post_path  = options[:path].try(:call)
-        @post_path ||= collection_path + '/import_rows'
+        @post_path ||= @collection_path + '/import_rows'
 
         @redirect_path = options[:redirect_path].try(:call)
-        @redirect_path ||= collection_path
+        @redirect_path ||= @collection_path
 
         @delimiter = options[:delimiter]
 
@@ -53,7 +54,7 @@ module ActiveAdminCsvImport
           row_number = row_params.delete('_row')
 
           resource = existing_row_resource(options[:import_unique_key], row_params)
-          resource ||= active_admin_config.resource_class.new
+          resource ||= build_row_resource
 
           unless update_row_resource(resource, row_params)
             @failures << {
@@ -85,6 +86,12 @@ module ActiveAdminCsvImport
         def update_row_resource(resource, params)
           resource.attributes = params
           resource.save
+        end
+
+        def build_row_resource
+          resource = end_of_association_chain.new
+          # controller before create callback
+          resource = before_create(resource) if respond_to? :before_create
         end
 
         def existing_row_resource(lookup_column, params)
