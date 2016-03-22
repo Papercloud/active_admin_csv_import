@@ -54,7 +54,7 @@ module ActiveAdminCsvImport
           row_number = row_params.delete('_row')
 
           resource = existing_row_resource(options[:import_unique_key], row_params)
-          resource ||= active_admin_config.resource_class.new
+          resource ||= build_row_resource
 
           unless update_row_resource(resource, row_params)
             @failures << {
@@ -86,6 +86,10 @@ module ActiveAdminCsvImport
         def update_row_resource(resource, params)
           resource.attributes = params
           resource.save
+        end
+
+        def build_row_resource
+          end_of_association_chain.new
         end
 
         def existing_row_resource(lookup_column, params)
