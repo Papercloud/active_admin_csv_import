@@ -56,6 +56,9 @@ module ActiveAdminCsvImport
           resource = existing_row_resource(options[:import_unique_key], row_params)
           resource ||= build_row_resource
 
+          # controller before create callback
+          resource = before_create(resource) if respond_to? :before_create
+
           unless update_row_resource(resource, row_params)
             @failures << {
               row_number: row_number,
