@@ -49,7 +49,7 @@ module ActiveAdminCsvImport
         @failures = []
 
         csv_resource_params.values.each do |row_params|
-          row_params = row_params.with_indifferent_access
+          row_params = row_params.to_h.with_indifferent_access
           row_number = row_params.delete('_row')
 
           resource = existing_row_resource(options[:import_unique_key], row_params)
